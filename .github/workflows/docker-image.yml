@@ -1,0 +1,51 @@
+name: Tabular Docker Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker tag to apply to this image'
+        required: true 
+        type: string
+  
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+        
+      - name: Build main
+        run: ./gradlew clean build shadowJar
+        
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: tabulario
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+      - name: BuildX and Push
+        uses: docker/build-push-action@v3
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: trino
+          IMAGE_TAG: ${{ inputs.tag }}
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: :${{ inputs.tag }}
+
