@@ -631,7 +631,7 @@ public class RESTCatalogAdapter
         context.setVirtualHosts(null);
         context.setGzipHandler(new GzipHandler());
 
-        Server httpServer = new Server(8088);
+        Server httpServer = new Server(8181);
         httpServer.setHandler(context);
 
         httpServer.start();

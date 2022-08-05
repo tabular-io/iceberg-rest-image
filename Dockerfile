@@ -20,7 +20,7 @@ RUN \
 
 COPY --chown=iceberg:iceberg build/libs /usr/lib/iceberg-rest
 
-EXPOSE 8088
+EXPOSE 8181
 USER iceberg:iceberg
 ENV LANG en_US.UTF-8
 WORKDIR /usr/lib/iceberg-rest
