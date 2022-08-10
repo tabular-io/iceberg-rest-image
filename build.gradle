@@ -27,3 +27,5 @@ jar {
     attributes 'Main-Class': 'org.apache.iceberg.rest.RESTCatalogAdapter'
   }
 }
+
+build.dependsOn(shadowJar)

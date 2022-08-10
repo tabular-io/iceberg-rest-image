@@ -21,6 +21,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.iceberg.CatalogProperties;
+import org.apache.iceberg.CatalogUtil;
 import org.apache.iceberg.catalog.Catalog;
 import org.apache.iceberg.catalog.Namespace;
 import org.apache.iceberg.catalog.SupportsNamespaces;
@@ -37,7 +38,6 @@ import org.apache.iceberg.exceptions.NotAuthorizedException;
 import org.apache.iceberg.exceptions.RESTException;
 import org.apache.iceberg.exceptions.UnprocessableEntityException;
 import org.apache.iceberg.exceptions.ValidationException;
-import org.apache.iceberg.jdbc.JdbcCatalog;
 import org.apache.iceberg.rest.requests.CreateNamespaceRequest;
 import org.apache.iceberg.rest.requests.CreateTableRequest;
 import org.apache.iceberg.rest.requests.RenameTableRequest;
@@ -53,11 +53,13 @@ import org.apache.iceberg.rest.responses.LoadTableResponse;
 import org.apache.iceberg.rest.responses.OAuthTokenResponse;
 import org.apache.iceberg.rest.responses.UpdateNamespacePropertiesResponse;
 import org.apache.iceberg.util.Pair;
-import org.eclipse.jetty.server.HttpConfiguration;
+import org.apache.iceberg.util.PropertyUtil;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +74,7 @@ import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -89,6 +92,7 @@ import static java.lang.String.format;
 public class RESTCatalogAdapter
         implements RESTClient
 {
+    private static final Logger LOG = LoggerFactory.getLogger(RESTCatalogAdapter.class);
     private static final Splitter SLASH = Splitter.on('/');
 
     private static final Map<Class<? extends Exception>, Integer> EXCEPTION_ERROR_CODES = ImmutableMap.<Class<? extends Exception>, Integer>builder()
@@ -598,24 +602,41 @@ public class RESTCatalogAdapter
         }
     }
 
-    public static Catalog backendCatalog()
-            throws IOException
+    public static Catalog backendCatalog() throws IOException
     {
-        File warehouseLocation = java.nio.file.Files.createTempDirectory("iceberg_warehouse").toFile();
-        warehouseLocation.deleteOnExit();
+        String CATALOG_ENV_PREFIX = "CATALOG_";
 
-        Map<String, String> properties = new HashMap<>();
-        properties.put(CatalogProperties.URI, "jdbc:sqlite:file:" + Files.createTempFile("iceberg", "rest") + "_mode=memory");
+        // Translate environment variable to catalog properties
+        Map<String, String> catalogProperties = System.getenv().entrySet().stream()
+                .filter(e -> e.getKey().startsWith(CATALOG_ENV_PREFIX))
+                .collect(Collectors.toMap(
+                        e -> e.getKey().replace(CATALOG_ENV_PREFIX, "")
+                                .replaceAll("__", "-")
+                                .replaceAll("_", ".")
+                                .toLowerCase(Locale.ROOT),
+                        Map.Entry::getValue,
+                        (m1, m2) -> { throw new IllegalArgumentException("Duplicate key"); },
+                        HashMap::new
+                ));
 
-        properties.put(JdbcCatalog.PROPERTY_PREFIX + "username", "user");
-        properties.put(JdbcCatalog.PROPERTY_PREFIX + "password", "password");
-        properties.put(CatalogProperties.WAREHOUSE_LOCATION, warehouseLocation.toPath().resolve("iceberg_data").toFile().getAbsolutePath());
+        // Fallback to a JDBCCatalog impl if one is not set
+        catalogProperties.putIfAbsent(CatalogProperties.CATALOG_IMPL, "org.apache.iceberg.jdbc.JdbcCatalog");
+        catalogProperties.putIfAbsent(CatalogProperties.URI, "jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory");
 
-        JdbcCatalog catalog = new JdbcCatalog();
-        catalog.setConf(new Configuration());
-        catalog.initialize("backend_jdbc", properties);
+        // Configure a default location if one is not specified
+        String warehouseLocation = catalogProperties.get(CatalogProperties.WAREHOUSE_LOCATION);
 
-        return catalog;
+        if (warehouseLocation == null) {
+            File tmp = java.nio.file.Files.createTempDirectory("iceberg_warehouse").toFile();
+            tmp.deleteOnExit();
+            warehouseLocation = tmp.toPath().resolve("iceberg_data").toFile().getAbsolutePath();
+            catalogProperties.put(CatalogProperties.WAREHOUSE_LOCATION, warehouseLocation);
+
+            LOG.info("No warehouse location set.  Defaulting to temp location: {}", warehouseLocation);
+        }
+
+        LOG.info("Creating catalog with properties: {}", catalogProperties);
+        return CatalogUtil.buildIcebergCatalog("rest_backend", catalogProperties, new Configuration());
     }
 
     public static void main(String[] args)
@@ -631,7 +652,7 @@ public class RESTCatalogAdapter
         context.setVirtualHosts(null);
         context.setGzipHandler(new GzipHandler());
 
-        Server httpServer = new Server(8181);
+        Server httpServer = new Server(PropertyUtil.propertyAsInt(System.getenv(), "REST_PORT", 8181));
         httpServer.setHandler(context);
 
         httpServer.start();
