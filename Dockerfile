@@ -20,6 +20,12 @@ RUN \
 
 COPY --chown=iceberg:iceberg build/libs /usr/lib/iceberg-rest
 
+ENV CATALOG_CATALOG__IMPL=org.apache.iceberg.jdbc.JdbcCatalog
+ENV CATALOG_URI=jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory
+ENV CATALOG_JDBC_USERNAME=user
+ENV CATALOG_JDBC_PASSWORD=password
+ENV REST_PORT=8181
+
 EXPOSE 8181
 USER iceberg:iceberg
 ENV LANG en_US.UTF-8
