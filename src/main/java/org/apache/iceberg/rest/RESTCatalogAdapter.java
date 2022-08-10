@@ -609,7 +609,7 @@ public class RESTCatalogAdapter
         Map<String, String> catalogProperties = System.getenv().entrySet().stream()
                 .filter(e -> e.getKey().startsWith(CATALOG_ENV_PREFIX))
                 .collect(Collectors.toMap(
-                        e -> e.getKey().replace(CATALOG_ENV_PREFIX, "")
+                        e -> e.getKey().replaceFirst(CATALOG_ENV_PREFIX, "")
                                 .replaceAll("__", "-")
                                 .replaceAll("_", ".")
                                 .toLowerCase(Locale.ROOT),
