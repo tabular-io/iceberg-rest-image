@@ -70,7 +70,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -643,6 +642,7 @@ public class RESTCatalogAdapter
             throws Exception
     {
         RESTCatalogAdapter adapter = new RESTCatalogAdapter(backendCatalog());
+        System.out.println("ENV VARS = " + System.getenv());
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
         context.setContextPath("/");

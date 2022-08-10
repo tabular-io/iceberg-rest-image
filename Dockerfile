@@ -26,8 +26,8 @@ ENV CATALOG_JDBC_USERNAME=user
 ENV CATALOG_JDBC_PASSWORD=password
 ENV REST_PORT=8181
 
-EXPOSE 8181
+EXPOSE $REST_PORT
 USER iceberg:iceberg
 ENV LANG en_US.UTF-8
 WORKDIR /usr/lib/iceberg-rest
-CMD ["java", "-cp", "./*", "org.apache.iceberg.rest.RESTCatalogAdapter"]
+CMD ["java", "-jar", "iceberg-rest-image-all.jar"]
