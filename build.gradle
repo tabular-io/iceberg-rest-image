@@ -8,10 +8,10 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.apache.iceberg:iceberg-api:0.14.0'
-  implementation 'org.apache.iceberg:iceberg-core:0.14.0'
-  implementation 'org.apache.iceberg:iceberg-aws:0.14.0'
-  implementation 'org.apache.iceberg:iceberg-bundled-guava:0.14.0'
+  implementation 'org.apache.iceberg:iceberg-api:0.14.1'
+  implementation 'org.apache.iceberg:iceberg-core:0.14.1'
+  implementation 'org.apache.iceberg:iceberg-aws:0.14.1'
+  implementation 'org.apache.iceberg:iceberg-bundled-guava:0.14.1'
 
   implementation 'org.apache.hadoop:hadoop-common:3.3.2'
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.3.2'

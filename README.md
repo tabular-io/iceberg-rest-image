@@ -7,6 +7,8 @@ For converting different catalog implementations into a rest one.
 To run it locally:
 
 ```sh
+./gradlew clean build
+
 export CATALOG_CATALOG__IMPL=org.apache.iceberg.aws.glue.GlueCatalog
 
 java -jar ./build/libs/iceberg-rest-image-all.jar
