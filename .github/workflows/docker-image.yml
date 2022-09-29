@@ -45,5 +45,5 @@ jobs:
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: tabulario/iceberg-rest-jdbc:${{ inputs.tag }}
+          tags: tabulario/iceberg-rest:${{ inputs.tag }}
 
