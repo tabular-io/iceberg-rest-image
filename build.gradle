@@ -3,6 +3,10 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
+repositories {
+  mavenCentral()
+}
+
 ext {
   icebergVersion = '1.1.0'
   awsSdkVersion = '2.17.257'
