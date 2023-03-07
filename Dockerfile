@@ -11,14 +11,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-FROM azul/zulu-openjdk:17
+FROM azul/zulu-openjdk:17 as builder
+
+COPY . /app/
+WORKDIR /app/
+
+RUN ["./gradlew", "build", "shadowJar"]
+
+FROM azul/zulu-openjdk:17-jre-headless
 
 RUN \
     set -xeu && \
     groupadd iceberg --gid 1000 && \
     useradd iceberg --uid 1000 --gid 1000 --create-home
 
-COPY --chown=iceberg:iceberg build/libs /usr/lib/iceberg-rest
+COPY --from=builder --chown=iceberg:iceberg /app/build/libs/iceberg-rest-image-all.jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
 
 ENV CATALOG_CATALOG__IMPL=org.apache.iceberg.jdbc.JdbcCatalog
 ENV CATALOG_URI=jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory
