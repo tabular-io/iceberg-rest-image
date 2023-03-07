@@ -28,7 +28,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: BuildX and Push
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         env:
           IMAGE_TAG: ${{ inputs.tag }}
         with:
