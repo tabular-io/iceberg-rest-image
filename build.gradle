@@ -19,7 +19,7 @@ dependencies {
   implementation "org.apache.iceberg:iceberg-aws:${icebergVersion}"
   implementation "org.apache.iceberg:iceberg-bundled-guava:${icebergVersion}"
 
-  implementation 'org.apache.hadoop:hadoop-common:3.3.2'
+  implementation 'org.apache.hadoop:hadoop-common:3.3.4'
   implementation 'org.apache.hadoop:hadoop-hdfs-client:3.3.2'
 
   runtimeOnly "software.amazon.awssdk:url-connection-client:${awsSdkVersion}"
