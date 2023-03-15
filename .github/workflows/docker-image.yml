@@ -28,7 +28,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: BuildX and Push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v3
+        if: ${{ github.ref_name == 'master' }}
         env:
           IMAGE_TAG: ${{ inputs.tag }}
         with:
@@ -38,3 +39,14 @@ jobs:
           push: true
           tags: tabulario/iceberg-rest:latest,tabulario/iceberg-rest:${{ inputs.tag }}
 
+      - name: BuildX and Push
+        uses: docker/build-push-action@v3
+        if: ${{ github.ref_name != 'master' }}
+        env:
+          IMAGE_TAG: ${{ inputs.tag }}
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: tabulario/iceberg-rest:${{ inputs.tag }}
