@@ -4,12 +4,15 @@ plugins {
 }
 
 repositories {
+  maven {
+    url "https://repository.apache.org/content/repositories/orgapacheiceberg-1121/"
+  }
   mavenCentral()
 }
 
 ext {
-  icebergVersion = '1.1.0'
-  awsSdkVersion = '2.17.257'
+  icebergVersion = '1.2.0'
+  awsSdkVersion = '2.20.18'
 }
 
 dependencies {
