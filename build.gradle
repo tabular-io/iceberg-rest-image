@@ -35,7 +35,7 @@ dependencies {
 
   implementation 'com.google.guava:guava:31.1-jre'
 
-  implementation 'org.xerial:sqlite-jdbc:3.41.0.0'
+  implementation 'org.xerial:sqlite-jdbc:3.41.2.1'
   implementation 'org.postgresql:postgresql:42.5.4'
 }
 
