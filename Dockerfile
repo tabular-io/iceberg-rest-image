@@ -26,6 +26,8 @@ RUN \
     useradd iceberg --uid 1000 --gid 1000 --create-home
 
 COPY --from=builder --chown=iceberg:iceberg /app/build/libs/iceberg-rest-image-all.jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
+RUN mkdir -p /etc/hadoop/conf
+COPY static/core-site.xml /etc/hadoop/conf/.
 
 ENV CATALOG_CATALOG__IMPL=org.apache.iceberg.jdbc.JdbcCatalog
 ENV CATALOG_URI=jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory
