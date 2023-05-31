@@ -8,7 +8,7 @@ repositories {
 }
 
 ext {
-  icebergVersion = '1.2.1'
+  icebergVersion = '1.3.0'
   awsSdkVersion = '2.20.18'
 }
 
