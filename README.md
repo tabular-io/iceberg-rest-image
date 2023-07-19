@@ -60,3 +60,10 @@ Properties            write.object-storage.enabled  true
                       write.object-storage.path     s3://iceberg-test-data/tpc/tpc-ds/3.2.0/1000/iceberg/customer/data
 ```
 
+## Building the Docker Image locally
+
+If you want to make changes to the local files, and test them out, you can build the image locally and use that instead:
+
+```bash
+docker image rm -f tabulario/iceberg-rest && docker build -t tabulario/iceberg-rest .
+```
