@@ -5,9 +5,6 @@ plugins {
 
 repositories {
   mavenCentral()
-  maven {
-    url = "https://repository.apache.org/content/repositories/orgapacheiceberg-1141"
-  }
 }
 
 ext {
