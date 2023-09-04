@@ -37,6 +37,9 @@ dependencies {
 
   implementation 'org.xerial:sqlite-jdbc:3.43.0.0'
   implementation 'org.postgresql:postgresql:42.5.4'
+
+  // Hive Metastore Dependencies
+  implementation "org.apache.iceberg:iceberg-hive-metastore:${icebergVersion}"
 }
 
 jar {
