@@ -40,6 +40,7 @@ dependencies {
 
   // Hive Metastore Dependencies
   implementation "org.apache.iceberg:iceberg-hive-metastore:${icebergVersion}"
+  implementation "org.apache.thrift:libthrift:0.19.0"
 }
 
 jar {
