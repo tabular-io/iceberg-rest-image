@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.iceberg.CatalogProperties;
 import org.apache.iceberg.CatalogUtil;
 import org.apache.iceberg.catalog.Catalog;
@@ -80,7 +79,7 @@ public class RESTCatalogServer {
     }
 
     LOG.info("Creating catalog with properties: {}", catalogProperties);
-    return CatalogUtil.buildIcebergCatalog("rest_backend", catalogProperties, new Configuration());
+    return CatalogUtil.buildIcebergCatalog("rest_backend", catalogProperties, HadoopUtils.getCoreSiteConfiguration());
   }
 
   public static void main(String[] args) throws Exception {
