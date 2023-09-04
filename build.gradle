@@ -42,6 +42,7 @@ dependencies {
   implementation "org.apache.iceberg:iceberg-hive-metastore:${icebergVersion}"
   implementation "org.apache.thrift:libthrift:0.19.0"
   implementation "org.apache.hive:hive-metastore:3.1.3"
+  implementation "org.apache.hadoop:hadoop-mapreduce-client-core:3.3.6"
 }
 
 jar {
