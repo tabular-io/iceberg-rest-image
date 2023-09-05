@@ -1,0 +1,9 @@
+services:
+  iceberg-rest-catalog:
+    build: .
+    image: tabulario/iceberg-rest
+    ports:
+      - 8181:8181
+    environment:
+      CATALOG_CATALOG__IMPL: org.apache.iceberg.hive.HiveCatalog
+      CATALOG_URI: thrift://host.docker.internal:9083
