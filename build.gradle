@@ -24,7 +24,7 @@ dependencies {
   runtimeOnly "org.apache.iceberg:iceberg-aws-bundle:${icebergVersion}"
 
   implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-  implementation 'org.apache.httpcomponents.core5:httpcore5:5.1.4'
+  implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.3'
 
   implementation 'com.google.guava:guava:32.1.1-jre'
 
