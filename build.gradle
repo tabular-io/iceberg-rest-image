@@ -8,7 +8,7 @@ repositories {
 }
 
 ext {
-  icebergVersion = '1.4.0'
+  icebergVersion = '1.4.1'
 }
 
 dependencies {
