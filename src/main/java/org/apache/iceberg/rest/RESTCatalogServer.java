@@ -42,7 +42,9 @@ public class RESTCatalogServer {
 
   private RESTCatalogServer() {}
 
-  private static Catalog backendCatalog() throws IOException {
+  record CatalogContext(Catalog catalog, Map<String,String> configuration) { }
+
+  private static CatalogContext backendCatalog() throws IOException {
     // Translate environment variable to catalog properties
     Map<String, String> catalogProperties =
         System.getenv().entrySet().stream()
@@ -80,12 +82,15 @@ public class RESTCatalogServer {
     }
 
     LOG.info("Creating catalog with properties: {}", catalogProperties);
-    return CatalogUtil.buildIcebergCatalog("rest_backend", catalogProperties, new Configuration());
+    return new CatalogContext(CatalogUtil.buildIcebergCatalog("rest_backend", catalogProperties, new Configuration()), catalogProperties);
   }
 
   public static void main(String[] args) throws Exception {
-    try (RESTCatalogAdapter adapter = new RESTCatalogAdapter(backendCatalog())) {
+    CatalogContext catalogContext = backendCatalog();
+
+    try (RESTCatalogAdapter adapter = new RESTServerCatalogAdapter(catalogContext)) {
       RESTCatalogServlet servlet = new RESTCatalogServlet(adapter);
+
       ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
       context.setContextPath("/");
       ServletHolder servletHolder = new ServletHolder(servlet);
