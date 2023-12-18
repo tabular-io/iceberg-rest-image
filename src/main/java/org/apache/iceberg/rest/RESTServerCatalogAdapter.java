@@ -26,9 +26,7 @@ public class RESTServerCatalogAdapter extends RESTCatalogAdapter {
     public <T extends RESTResponse> T handleRequest(Route route, Map<String, String> vars, Object body, Class<T> responseType) {
         T restResponse = super.handleRequest(route, vars, body, responseType);
 
-        if (route == Route.LOAD_TABLE) {
-            LoadTableResponse loadTableResponse = (LoadTableResponse) restResponse;
-
+        if (restResponse instanceof LoadTableResponse loadTableResponse) {
             if (PropertyUtil.propertyAsBoolean(catalogContext.configuration(), INCLUDE_CREDENTIALS, false)) {
                 applyCredentials(catalogContext.configuration(), loadTableResponse.config());
             }
