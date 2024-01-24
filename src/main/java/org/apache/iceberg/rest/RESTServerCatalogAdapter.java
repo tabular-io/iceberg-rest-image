@@ -52,9 +52,9 @@ public class RESTServerCatalogAdapter extends RESTCatalogAdapter {
             tableConfig.put(GCPProperties.GCS_OAUTH2_TOKEN, catalogConfig.get(GCPProperties.GCS_OAUTH2_TOKEN));
         }
 
-        Map<String, String> azureTokens = PropertyUtil.propertiesWithPrefix(catalogConfig, AzureProperties.ADLS_SAS_TOKEN_PREFIX);
-        if (!azureTokens.isEmpty()) {
-            tableConfig.putAll(azureTokens);
-        }
+        catalogConfig.entrySet().stream()
+                .filter(entry -> entry.getKey().startsWith(AzureProperties.ADLS_SAS_TOKEN_PREFIX) ||
+                        entry.getKey().startsWith(AzureProperties.ADLS_CONNECTION_STRING_PREFIX))
+                .forEach(entry -> tableConfig.put(entry.getKey(), entry.getValue()));
     }
 }
