@@ -10,5 +10,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - uses: gradle/actions/wrapper-validation@v3
+
       - name: Build image
         run: docker build .
