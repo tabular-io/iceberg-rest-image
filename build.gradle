@@ -24,7 +24,7 @@ repositories {
 }
 
 ext {
-  icebergVersion = '1.5.0'
+  icebergVersion = '1.5.1'
   hadoopVersion = '3.3.6'
 }
 
