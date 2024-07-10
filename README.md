@@ -12,6 +12,10 @@ export CATALOG_CATALOG__IMPL=org.apache.iceberg.aws.glue.GlueCatalog
 java -jar ./build/libs/iceberg-rest-image-all.jar
 ```
 
+## Example
+
+how run a iceberg-rest service using a centralized external database -> [example](./example/README.md) 
+
 ## Browse
 
 To browse the catalog, you can use `pyiceberg`:
