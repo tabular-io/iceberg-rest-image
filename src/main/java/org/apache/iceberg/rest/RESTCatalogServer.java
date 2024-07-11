@@ -66,6 +66,7 @@ public class RESTCatalogServer {
         CatalogProperties.CATALOG_IMPL, "org.apache.iceberg.jdbc.JdbcCatalog");
     catalogProperties.putIfAbsent(
         CatalogProperties.URI, "jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory");
+    catalogProperties.putIfAbsent("jdbc.schema-version", "V1");
 
     // Configure a default location if one is not specified
     String warehouseLocation = catalogProperties.get(CatalogProperties.WAREHOUSE_LOCATION);
