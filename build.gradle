@@ -24,7 +24,7 @@ repositories {
 }
 
 ext {
-  icebergVersion = '1.6.0'
+  icebergVersion = '1.9.1'
   hadoopVersion = '3.3.6'
 }
 
@@ -46,6 +46,9 @@ dependencies {
 
   implementation 'org.apache.httpcomponents.client5:httpclient5:5.3.1'
   implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.5'
+  implementation 'org.eclipse.jetty:jetty-servlet:11.0.24'
+  implementation 'org.eclipse.jetty:jetty-server:11.0.24'
+  implementation 'javax.servlet:javax.servlet-api:4.0.1'
 
   implementation 'com.google.guava:guava:33.3.0-jre'
 
