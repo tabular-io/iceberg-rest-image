@@ -13,14 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM azul/zulu-openjdk:17 as builder
+FROM azul/zulu-openjdk:21 AS builder
 
 COPY . /app/
 WORKDIR /app/
 
 RUN ["./gradlew", "build", "shadowJar"]
 
-FROM azul/zulu-openjdk:17-jre-headless
+FROM azul/zulu-openjdk:21-jre-headless
 
 RUN \
     set -xeu && \
@@ -29,14 +29,10 @@ RUN \
 
 COPY --from=builder --chown=iceberg:iceberg /app/build/libs/iceberg-rest-image-all.jar /usr/lib/iceberg-rest/iceberg-rest-image-all.jar
 
-ENV CATALOG_CATALOG__IMPL=org.apache.iceberg.jdbc.JdbcCatalog
-ENV CATALOG_URI=jdbc:sqlite:file:/tmp/iceberg_rest_mode=memory
-ENV CATALOG_JDBC_USER=user
-ENV CATALOG_JDBC_PASSWORD=password
 ENV REST_PORT=8181
 
 EXPOSE $REST_PORT
 USER iceberg:iceberg
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 WORKDIR /usr/lib/iceberg-rest
 CMD ["java", "-jar", "iceberg-rest-image-all.jar"]
